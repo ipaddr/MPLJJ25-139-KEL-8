@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'pengajuan_page.dart';
 import 'status_page.dart';
-import 'riwayat_page.dart';
 import 'edukasi_page.dart';
-import '../widgets/bottom_nav.dart';
+import '../widgets/bottom_nav.dart'; // pastikan file ini ada
 
 class HomePage extends StatelessWidget {
+  HomePage({Key? key}) : super(key: key);
+
   final List<Map<String, dynamic>> menu = [
     {'title': 'Pengajuan', 'page': PengajuanPage()},
     {'title': 'Cek Status', 'page': StatusPage()},
@@ -15,7 +16,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Beranda Masyarakat')),
+      appBar: AppBar(title: const Text('Beranda Masyarakat')),
       body: ListView.builder(
         itemCount: menu.length,
         itemBuilder: (context, index) {
@@ -30,7 +31,7 @@ class HomePage extends StatelessWidget {
           );
         },
       ),
-      bottomNavigationBar: BottomNavBar(),
+      bottomNavigationBar: const BottomNavBar(),
     );
   }
 }
