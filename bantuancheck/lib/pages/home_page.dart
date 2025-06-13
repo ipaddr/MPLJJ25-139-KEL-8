@@ -1,59 +1,23 @@
 import 'package:flutter/material.dart';
 import 'pengajuan_page.dart';
-import 'cek_status_page.dart';
-import 'edukasi_page.dart';
+import 'status_page.dart';
 import 'riwayat_page.dart';
-import 'chat_page.dart';
-import 'panduan_page.dart';
+import 'edukasi_page.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+class HomePage extends StatelessWidget {
+  final String userName;
 
-  @override
-  State<HomePage> createState() => _HomePageState();
-}
-
-class _HomePageState extends State<HomePage> {
-  int _currentIndex = 0;
-
-  final List<Widget> _mainPages = [
-    MainMenuPage(),
-    ChatPage(),
-    PanduanPage(),
-    RiwayatPage(),
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: _mainPages[_currentIndex],
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) => setState(() => _currentIndex = index),
-        type: BottomNavigationBarType.fixed,
-        items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Beranda'),
-          BottomNavigationBarItem(icon: Icon(Icons.chat), label: 'Chat'),
-          BottomNavigationBarItem(icon: Icon(Icons.book), label: 'Panduan'),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
-        ],
-      ),
-    );
-  }
-}
-
-class MainMenuPage extends StatelessWidget {
-  const MainMenuPage({super.key});
+  const HomePage({Key? key, this.userName = "Warga"}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("BantuanCheck"),
-        centerTitle: true,
+        title: Text('Selamat Datang, $userName 👋'),
+        backgroundColor: Colors.green,
       ),
       body: Padding(
-        padding: const EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16.0),
         child: GridView.count(
           crossAxisCount: 2,
           crossAxisSpacing: 16,
@@ -61,22 +25,54 @@ class MainMenuPage extends StatelessWidget {
           children: [
             _buildMenuItem(
               context,
-              icon: Icons.assignment,
-              title: "Pengajuan",
-              targetPage: const PengajuanPage(),
+              title: 'Ajukan Bantuan',
+              icon: Icons.edit_note_rounded,
+              color: Colors.orange,
+              page: PengajuanPage(),
             ),
             _buildMenuItem(
               context,
-              icon: Icons.search,
-              title: "Cek Status",
-              targetPage: const CekStatusPage(),
+              title: 'Cek Status',
+              icon: Icons.assignment_turned_in_outlined,
+              color: Colors.blue,
+              page: CekStatusPage(),
             ),
             _buildMenuItem(
               context,
-              icon: Icons.school,
-              title: "Edukasi",
-              targetPage: const EdukasiPage(),
+              title: 'Riwayat',
+              icon: Icons.history,
+              color: Colors.purple,
+              page: RiwayatPage(),
             ),
+            _buildMenuItem(
+              context,
+              title: 'Edukasi',
+              icon: Icons.school_rounded,
+              color: Colors.teal,
+              page: EdukasiPage(),
+            ),
+          ],
+        ),
+      ),
+      bottomNavigationBar: BottomAppBar(
+        color: Colors.grey[100],
+        shape: const CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            IconButton(
+                icon: Icon(Icons.chat), onPressed: () {/* fitur chat */}),
+            IconButton(
+                icon: Icon(Icons.menu_book),
+                onPressed: () {/* fitur buku panduan */}),
+            IconButton(
+                icon: Icon(Icons.analytics),
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => RiwayatPage()),
+                  );
+                }),
           ],
         ),
       ),
@@ -84,21 +80,33 @@ class MainMenuPage extends StatelessWidget {
   }
 
   Widget _buildMenuItem(BuildContext context,
-      {required IconData icon,
-      required String title,
-      required Widget targetPage}) {
+      {required String title,
+      required IconData icon,
+      required Color color,
+      required Widget page}) {
     return GestureDetector(
-      onTap: () => Navigator.push(
-          context, MaterialPageRoute(builder: (_) => targetPage)),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (_) => page),
+        );
+      },
       child: Card(
-        elevation: 4,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(icon, size: 48, color: Colors.blue),
-            const SizedBox(height: 8),
-            Text(title, style: const TextStyle(fontSize: 16)),
-          ],
+        color: color.withOpacity(0.8),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        child: Center(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(icon, size: 50, color: Colors.white),
+              const SizedBox(height: 10),
+              Text(title,
+                  style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white)),
+            ],
+          ),
         ),
       ),
     );

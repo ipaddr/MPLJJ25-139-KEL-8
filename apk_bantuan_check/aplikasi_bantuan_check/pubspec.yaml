@@ -1,0 +1,52 @@
+name: aplikasi_bantuan_check
+description: "A new Flutter project."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  firebase_core: ^2.27.0
+  firebase_auth: ^4.17.8
+  cloud_firestore: ^4.15.8
+  firebase_storage: ^11.6.9
+  image_picker: ^1.1.2
+  file_picker: ^8.0.0+1
+  url_launcher: ^6.2.5
+  provider: ^6.1.2 # Ingat, Anda memilih untuk tidak menggunakan Provider, jadi ini bisa dihapus jika Anda yakin tidak memerlukannya. Tapi jika ada, tidak masalah.
+  intl: ^0.19.0 # <--- Ini yang penting untuk error Anda!
+
+  # fl_chart: ^0.68.0 # Jika ingin grafik dinamis, uncomment ini
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+# Bagian ini adalah untuk konfigurasi Flutter (assets, fonts, dll.)
+flutter:
+  uses-material-design: true
+
+  # Ini adalah tempat untuk assets seperti gambar.
+  assets:
+    - assets/images/logo_garuda.png # Contoh: jika Anda punya gambar grafik
+
+
+  # Anda harus MENGHAPUS SEMUA BARIS INI (yang saya komentari di bawah),
+  # karena ini adalah duplikasi dependensi yang tidak boleh ada di bawah 'flutter:'
+  # cupertino_icons: ^1.0.8
+  # firebase_core: ^2.27.0
+  # firebase_auth: ^4.17.8
+  # cloud_firestore: ^4.15.8
+  # firebase_storage: ^11.6.9
+  # image_picker: ^1.1.2
+  # file_picker: ^8.0.0+1
+  # url_launcher: ^6.2.5
+  # intl: ^0.19.0

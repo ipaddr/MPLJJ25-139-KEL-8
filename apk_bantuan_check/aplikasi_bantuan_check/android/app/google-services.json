@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "315961273637",
+    "project_id": "aplikasibantuancheck",
+    "storage_bucket": "aplikasibantuancheck.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315961273637:android:ba0a4f34d4f69ce723fecc",
+        "android_client_info": {
+          "package_name": "com.example.aplikasi_bantuan_check"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDUJj8QGo1whqJkH3bTak-vMBOTMob-lQI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

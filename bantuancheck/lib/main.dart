@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'screens/login_page.dart';
+import 'pages/login_page.dart'; // Pastikan file ini ada dan class LoginPage tersedia
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(const BantuanCheckApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class BantuanCheckApp extends StatelessWidget {
+  const BantuanCheckApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Bantuan Check',
-      theme: ThemeData(
-        primarySwatch: Colors.teal,
-      ),
-      home: const LoginPage(),
+      title: 'BantuanCheck',
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      // Langsung tampilkan halaman login
+      home: const LoginPage(),
     );
   }
 }
