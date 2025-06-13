@@ -1,10 +1,9 @@
-import 'dart:io';
 import 'package:aplikasi_bantuan_check/app_constants.dart';
-import 'package:aplikasi_bantuan_check/models/submission_model.dart';
+import 'package:aplikasi_bantuan_check/models/submission_model.dart'; // Pastikan ini sudah diimpor dan diperbarui
 import 'package:aplikasi_bantuan_check/services/firestore_service.dart';
-import 'package:aplikasi_bantuan_check/services/storage_service.dart';
+// import 'package:aplikasi_bantuan_check/services/storage_service.dart'; // Tidak diperlukan lagi
 import 'package:flutter/material.dart';
-import 'package:file_picker/file_picker.dart';
+// import 'package:file_picker/file_picker.dart'; // Tidak diperlukan lagi
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SubmissionFormScreen extends StatefulWidget {
@@ -21,35 +20,26 @@ class _SubmissionFormScreenState extends State<SubmissionFormScreen> {
   final TextEditingController _jumlahPengajuanController =
       TextEditingController();
   final TextEditingController _noRekeningController = TextEditingController();
+  final TextEditingController _keteranganDokumenController =
+      TextEditingController(); // <-- Tambahan: Untuk deskripsi keterangan
 
-  File? _pickedDocument;
-  String? _documentFileName;
+  // Variabel untuk upload dokumen sudah dihapus karena tidak digunakan lagi
+
   bool _isLoading = false;
 
   final FirestoreService _firestoreService = FirestoreService();
-  final StorageService _storageService = StorageService();
+  // Service StorageService tidak diperlukan lagi jika tidak ada upload dokumen
 
-  Future<void> _pickDocument() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'],
-    );
-
-    if (result != null) {
-      setState(() {
-        _pickedDocument = File(result.files.single.path!);
-        _documentFileName = result.files.single.name;
-      });
-    }
-  }
+  // Fungsi _pickDocument() sudah dihapus karena tidak digunakan lagi
 
   Future<void> _submitApplication() async {
     if (_formKey.currentState!.validate()) {
-      if (_pickedDocument == null) {
+      // Validasi untuk keterangan dokumen
+      if (_keteranganDokumenController.text.trim().isEmpty) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text('Silakan upload dokumen yang diperlukan.')),
+                content: Text('Keterangan dokumen tidak boleh kosong.')),
           );
         }
         return;
@@ -70,23 +60,17 @@ class _SubmissionFormScreenState extends State<SubmissionFormScreen> {
         _isLoading = true;
       });
 
-      String? documentUrl;
       try {
-        if (_pickedDocument != null) {
-          String path =
-              'documents/${currentUser.uid}_${DateTime.now().millisecondsSinceEpoch}_${_documentFileName}';
-          documentUrl =
-              await _storageService.uploadFile(_pickedDocument!, path);
-        }
-
         final newSubmission = SubmissionModel(
-          id: '',
+          id: '', // ID akan digenerate oleh Firestore
           userId: currentUser.uid,
           alamat: _alamatController.text,
           jenisBantuan: _jenisBantuanController.text,
           jumlahPengajuan: int.parse(_jumlahPengajuanController.text),
           noRekening: _noRekeningController.text,
-          documentUrl: documentUrl,
+          documentUrl: null, // Set ke null karena tidak ada lagi upload dokumen
+          keteranganDokumen: _keteranganDokumenController
+              .text, // <-- Simpan keterangan di sini
           status: AppConstants.statusPending,
           timestamp: DateTime.now(),
         );
@@ -122,6 +106,7 @@ class _SubmissionFormScreenState extends State<SubmissionFormScreen> {
     _jenisBantuanController.dispose();
     _jumlahPengajuanController.dispose();
     _noRekeningController.dispose();
+    _keteranganDokumenController.dispose(); // <-- Dispose controller baru
     super.dispose();
   }
 
@@ -192,7 +177,7 @@ class _SubmissionFormScreenState extends State<SubmissionFormScreen> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 20), // Perbesar spasi
+                              const SizedBox(height: 20),
                               TextFormField(
                                 controller: _jenisBantuanController,
                                 decoration: _inputDecoration(
@@ -234,47 +219,22 @@ class _SubmissionFormScreenState extends State<SubmissionFormScreen> {
                                   return null;
                                 },
                               ),
-                              const SizedBox(height: 20), // Perbesar spasi
-                              // Tombol Upload Dokumen
-                              ElevatedButton(
-                                onPressed: _pickDocument,
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor:
-                                      Colors.white, // Background putih
-                                  foregroundColor:
-                                      Colors.black54, // Teks abu-abu
-                                  minimumSize: const Size(double.infinity, 50),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(
-                                        10), // Sudut membulat
-                                    side: BorderSide(
-                                        color:
-                                            Colors.grey[400]!), // Border tipis
-                                  ),
-                                  elevation: 2,
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 16, vertical: 12),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(_documentFileName ?? 'Upload Dokumen'),
-                                    const Icon(Icons.upload_file),
-                                  ],
-                                ),
+                              const SizedBox(height: 20),
+                              // Ganti bagian "Upload Dokumen" dengan "Keterangan Dokumen"
+                              TextFormField(
+                                // <-- INI PENGGANTI TOMBOL UPLOAD DOKUMEN
+                                controller: _keteranganDokumenController,
+                                decoration: _inputDecoration(
+                                    'Keterangan Dokumen', Icons.description),
+                                maxLines: 3, // Izinkan multi-baris
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Keterangan dokumen tidak boleh kosong';
+                                  }
+                                  return null;
+                                },
                               ),
-                              if (_pickedDocument != null)
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8.0),
-                                  child: Text(
-                                    'File terpilih: $_documentFileName',
-                                    style: const TextStyle(
-                                        fontStyle: FontStyle.italic,
-                                        fontSize: 13),
-                                  ),
-                                ),
-                              const SizedBox(height: 30), // Perbesar spasi
+                              const SizedBox(height: 30),
                               _isLoading
                                   ? const CircularProgressIndicator(
                                       color: Color(

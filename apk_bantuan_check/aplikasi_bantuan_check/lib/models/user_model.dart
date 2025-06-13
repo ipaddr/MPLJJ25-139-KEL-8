@@ -11,8 +11,8 @@ class UserModel {
     required this.uid,
     required this.email,
     required this.role,
-    this.name, // Pastikan ini ada
-    this.nik, // Pastikan ini ada
+    this.name, // Pastikan ini ada di konstruktor
+    this.nik, // Pastikan ini ada di konstruktor
   });
 
   factory UserModel.fromFirestore(DocumentSnapshot doc) {
@@ -21,8 +21,8 @@ class UserModel {
       uid: doc.id,
       email: data['email'] ?? '',
       role: data['role'] ?? 'masyarakat',
-      name: data['name'], // Ambil dari Firestore
-      nik: data['nik'], // Ambil dari Firestore
+      name: data['name'], // Pastikan field 'name' dibaca dari Firestore
+      nik: data['nik'], // Pastikan field 'nik' dibaca dari Firestore
     );
   }
 
@@ -30,8 +30,8 @@ class UserModel {
     return {
       'email': email,
       'role': role,
-      'name': name, // Simpan ke Firestore
-      'nik': nik, // Simpan ke Firestore
+      'name': name, // Pastikan field 'name' ditulis ke Firestore
+      'nik': nik, // Pastikan field 'nik' ditulis ke Firestore
     };
   }
 }

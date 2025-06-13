@@ -22,8 +22,8 @@ dependencies:
   url_launcher: ^6.2.5
   provider: ^6.1.2 # Ingat, Anda memilih untuk tidak menggunakan Provider, jadi ini bisa dihapus jika Anda yakin tidak memerlukannya. Tapi jika ada, tidak masalah.
   intl: ^0.19.0 # <--- Ini yang penting untuk error Anda!
-
-  # fl_chart: ^0.68.0 # Jika ingin grafik dinamis, uncomment ini
+  fl_chart: ^0.68.0 # Jika ingin grafik dinamis, uncomment ini
+  google_generative_ai: ^0.2.2
 
 dev_dependencies:
   flutter_test:
@@ -36,8 +36,7 @@ flutter:
 
   # Ini adalah tempat untuk assets seperti gambar.
   assets:
-    - assets/images/logo_garuda.png # Contoh: jika Anda punya gambar grafik
-
+    - assets/images/
 
   # Anda harus MENGHAPUS SEMUA BARIS INI (yang saya komentari di bawah),
   # karena ini adalah duplikasi dependensi yang tidak boleh ada di bawah 'flutter:'

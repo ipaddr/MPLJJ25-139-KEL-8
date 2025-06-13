@@ -5,14 +5,11 @@ import 'package:aplikasi_bantuan_check/screens/admin/verification_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:aplikasi_bantuan_check/models/user_model.dart';
-
-// TAMBAHKAN IMPORTS YANG HILANG DI SINI
-import 'package:aplikasi_bantuan_check/screens/masyarakat/chatbot_screen.dart'; // <--- Tambahkan ini
-import 'package:aplikasi_bantuan_check/screens/masyarakat/guide_book_screen.dart'; // <--- Tambahkan ini
-import 'package:aplikasi_bantuan_check/screens/masyarakat/history_screen.dart'; // <--- Tambahkan ini
+import 'package:aplikasi_bantuan_check/screens/masyarakat/chatbot_screen.dart'; // Import untuk BottomNav
+import 'package:aplikasi_bantuan_check/screens/masyarakat/guide_book_screen.dart'; // Import untuk BottomNav
+import 'package:aplikasi_bantuan_check/screens/masyarakat/history_screen.dart'; // Import untuk BottomNav
 
 class HomeAdminScreen extends StatefulWidget {
-  // Ini harus tetap tanpa 'const' karena _authService bukan const
   HomeAdminScreen({super.key});
 
   @override
@@ -46,14 +43,16 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
     final String displayName = _currentUserModel?.name ?? 'Admin';
 
     return Scaffold(
-      backgroundColor: const Color(0xFF0C72C3),
+      backgroundColor:
+          const Color(0xFF0C72C3), // Warna biru latar belakang utama
       body: Column(
         children: [
+          // Header Kustom
           Container(
             padding:
                 const EdgeInsets.only(top: 40, bottom: 20, left: 20, right: 20),
             decoration: const BoxDecoration(
-              color: Color(0xFFFFF7E7),
+              color: Color(0xFFFFF7E7), // Warna krem untuk header
               borderRadius: BorderRadius.vertical(bottom: Radius.circular(30)),
               boxShadow: [
                 BoxShadow(
@@ -88,15 +87,18 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
                     );
                   },
                 ),
+                // Tombol Logout di Header
                 IconButton(
                   icon: const Icon(Icons.logout, color: Colors.red),
                   onPressed: () async {
                     await _authService.signOut();
+                    // Navigasi otomatis ke login screen setelah logout (ditangani di main.dart)
                   },
                 ),
               ],
             ),
           ),
+          // Body utama aplikasi (tombol-tombol fitur)
           Expanded(
             child: Center(
               child: Padding(
@@ -143,7 +145,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home), // Ikon Beranda Admin
             label: 'Beranda',
           ),
           BottomNavigationBarItem(
@@ -159,34 +161,32 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
             label: 'Riwayat Usaha',
           ),
         ],
-        currentIndex: 0,
+        currentIndex:
+            0, // Admin dashboard tidak memiliki IndexedStack untuk footer
         selectedItemColor: const Color(0xFF28A745),
         unselectedItemColor: Colors.grey[700],
         onTap: (index) {
+          // Navigasi untuk Admin Footer (perlu dibuatkan rute atau screen terpisah)
           switch (index) {
-            case 0:
-              // Beranda Admin (sudah di sini)
+            case 0: // Beranda Admin (sudah di sini)
               break;
-            case 1:
+            case 1: // Chatbot
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          const ChatbotScreen())); // <-- Tambahkan 'const' jika memungkinkan
+                      builder: (context) => const ChatbotScreen()));
               break;
-            case 2:
+            case 2: // Buku Panduan
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          const GuideBookScreen())); // <-- Tambahkan 'const' jika memungkinkan
+                      builder: (context) => const GuideBookScreen()));
               break;
-            case 3:
+            case 3: // Riwayat Usaha (meskipun ini lebih untuk masyarakat, mungkin admin juga perlu)
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) =>
-                          const HistoryScreen())); // <-- Tambahkan 'const' jika memungkinkan
+                      builder: (context) => const HistoryScreen()));
               break;
           }
         },
@@ -204,7 +204,7 @@ class _HomeAdminScreenState extends State<HomeAdminScreen> {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFF9800),
+          backgroundColor: const Color(0xFFFF9800), // Warna oranye dari desain
           foregroundColor: Colors.white,
           minimumSize: const Size(double.infinity, 60),
           shape: RoundedRectangleBorder(

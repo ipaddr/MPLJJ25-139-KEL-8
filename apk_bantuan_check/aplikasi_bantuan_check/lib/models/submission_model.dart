@@ -7,8 +7,10 @@ class SubmissionModel {
   final String jenisBantuan;
   final int jumlahPengajuan;
   final String noRekening;
-  final String? documentUrl; // URL dokumen yang diupload
-  String status; // Pending, Diterima, Ditolak
+  final String?
+      documentUrl; // Mungkin tetap ada untuk kompatibilitas, tapi akan null
+  final String? keteranganDokumen; // <-- TAMBAHAN: Field baru untuk keterangan
+  String status;
   final DateTime timestamp;
 
   SubmissionModel({
@@ -19,6 +21,7 @@ class SubmissionModel {
     required this.jumlahPengajuan,
     required this.noRekening,
     this.documentUrl,
+    this.keteranganDokumen, // <-- TAMBAHAN: Konstruktor
     required this.status,
     required this.timestamp,
   });
@@ -33,6 +36,7 @@ class SubmissionModel {
       jumlahPengajuan: data['jumlahPengajuan'] ?? 0,
       noRekening: data['noRekening'] ?? '',
       documentUrl: data['documentUrl'],
+      keteranganDokumen: data['keteranganDokumen'], // <-- Ambil dari Firestore
       status: data['status'] ?? 'Pending',
       timestamp: (data['timestamp'] as Timestamp).toDate(),
     );
@@ -46,6 +50,7 @@ class SubmissionModel {
       'jumlahPengajuan': jumlahPengajuan,
       'noRekening': noRekening,
       'documentUrl': documentUrl,
+      'keteranganDokumen': keteranganDokumen, // <-- Simpan ke Firestore
       'status': status,
       'timestamp': Timestamp.fromDate(timestamp),
     };

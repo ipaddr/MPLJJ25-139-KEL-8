@@ -5,10 +5,31 @@ import 'package:url_launcher/url_launcher.dart';
 class EducationScreen extends StatelessWidget {
   const EducationScreen({super.key});
 
-  Future<void> _launchURL(String url) async {
-    if (!await launchUrl(Uri.parse(url),
-        mode: LaunchMode.externalApplication)) {
-      throw 'Could not launch $url';
+  Future<void> _launchURL(String url, BuildContext context) async {
+    if (url.isEmpty || !Uri.tryParse(url)!.isAbsolute) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('URL video tidak valid.')),
+        );
+      }
+      return;
+    }
+
+    try {
+      if (!await launchUrl(Uri.parse(url),
+          mode: LaunchMode.externalApplication)) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text('Tidak dapat membuka link: $url')),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Terjadi kesalahan saat membuka link: $e')),
+        );
+      }
     }
   }
 
@@ -79,34 +100,62 @@ class EducationScreen extends StatelessWidget {
                         itemCount: educationLinks.length,
                         itemBuilder: (context, index) {
                           final link = educationLinks[index];
+                          final String videoUrl = link['url'] ?? '';
+                          final String thumbnailUrl =
+                              link['thumbnailUrl'] ?? '';
+                          final String title = link['title'] ?? 'Judul Video';
+                          final String description =
+                              link['description'] ?? 'Deskripsi video.';
+                          final String duration = link['duration'] ??
+                              '00:00'; // Asumsi Firestore memiliki field 'duration'
+
                           return Card(
-                            color: const Color(
-                                0xFFFFF7E7), // Warna krem/kuning muda untuk kartu
+                            color: const Color(0xFFFFF7E7),
                             shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(15), // Sudut membulat
+                              borderRadius: BorderRadius.circular(15),
                             ),
                             elevation: 5,
-                            margin: const EdgeInsets.only(
-                                bottom: 20), // Spasi antar kartu
+                            margin: const EdgeInsets.only(bottom: 20),
                             child: InkWell(
-                              // Menggunakan InkWell agar kartu bisa diklik
-                              onTap: () => _launchURL(link['url'] ?? ''),
+                              onTap: () => _launchURL(videoUrl, context),
                               borderRadius: BorderRadius.circular(15),
                               child: Padding(
                                 padding: const EdgeInsets.all(15.0),
                                 child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment
+                                      .start, // Atur ke start untuk alignment atas
                                   children: [
-                                    // Placeholder untuk Thumbnail
+                                    // Gambar Thumbnail (Cover)
                                     Container(
-                                      width: 80,
-                                      height: 60,
+                                      width: 100,
+                                      height: 75,
                                       decoration: BoxDecoration(
                                         color: Colors.grey[300],
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      child: const Icon(Icons.play_circle_fill,
-                                          size: 40, color: Colors.grey),
+                                      child: thumbnailUrl.isNotEmpty
+                                          ? ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              child: Image.network(
+                                                thumbnailUrl,
+                                                fit: BoxFit.cover,
+                                                errorBuilder: (context, error,
+                                                    stackTrace) {
+                                                  // Fallback jika gambar gagal dimuat
+                                                  return const Center(
+                                                      child: Icon(
+                                                          Icons.broken_image,
+                                                          size: 40,
+                                                          color: Colors.grey));
+                                                },
+                                              ),
+                                            )
+                                          : const Center(
+                                              child: Icon(
+                                                  Icons.play_circle_fill,
+                                                  size: 40,
+                                                  color: Colors.grey)),
                                     ),
                                     const SizedBox(width: 15),
                                     Expanded(
@@ -115,38 +164,43 @@ class EducationScreen extends StatelessWidget {
                                             CrossAxisAlignment.start,
                                         children: [
                                           Text(
-                                            link['title'] ?? 'Video Edukasi',
+                                            title, // Menggunakan variabel 'title'
                                             style: const TextStyle(
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold,
                                               color: Colors.black87,
                                             ),
-                                            maxLines: 2, // Batasi 2 baris
+                                            maxLines: 2,
                                             overflow: TextOverflow.ellipsis,
                                           ),
+                                          const SizedBox(height: 5),
                                           Text(
-                                            link['description'] ??
-                                                'Tonton video ini untuk informasi lebih lanjut.',
+                                            description, // Menggunakan variabel 'description'
                                             style: TextStyle(
                                               fontSize: 12,
                                               color: Colors.grey[600],
                                             ),
-                                            maxLines: 1, // Batasi 1 baris
+                                            maxLines: 1,
                                             overflow: TextOverflow.ellipsis,
                                           ),
                                         ],
                                       ),
                                     ),
-                                    const SizedBox(width: 15),
-                                    // Durasi/Tanggal (placeholder)
-                                    Text(
-                                      link['duration'] ??
-                                          '10.41', // Ganti dengan field durasi jika ada, atau tanggal
-                                      style: const TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.grey,
+                                    // Durasi/Detik (sesuai permintaan)
+                                    if (duration.isNotEmpty &&
+                                        duration !=
+                                            '00:00') // Tampilkan hanya jika ada durasi
+                                      Padding(
+                                        padding:
+                                            const EdgeInsets.only(left: 8.0),
+                                        child: Text(
+                                          duration, // Menggunakan variabel 'duration'
+                                          style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.grey,
+                                          ),
+                                        ),
                                       ),
-                                    ),
                                   ],
                                 ),
                               ),
@@ -171,8 +225,8 @@ class EducationScreen extends StatelessWidget {
               icon: const Icon(Icons.arrow_back),
               label: const Text('Kembali'),
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFFFF7E7), // Warna kuning muda
-                foregroundColor: Colors.black87, // Teks hitam
+                backgroundColor: const Color(0xFFFFF7E7),
+                foregroundColor: Colors.black87,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),

@@ -10,4 +10,8 @@ class AppConstants {
   static const String statusPending = 'Pending';
   static const String statusAccepted = 'Diterima';
   static const String statusRejected = 'Ditolak';
+
+  // Kunci API Gemini Anda. JANGAN PERNAH MENGUNGGAH INI KE REPOSITORI PUBLIK!
+  static const String geminiApiKey =
+      'AIzaSyAgGSpVeURh_9hzTrSpNYorzLkRm2S5gP0'; // <--- GANTI DENGAN KUNCI API ANDA
 }
